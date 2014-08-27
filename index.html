@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="test">
+<head>
+    <title>Angular Horizontal Demo.</title>
+    <style>
+    /* ng-sortable css file */
+    .sortable-item,.sortable-placeholder{display:block;min-height:20px;margin:1px 2px 5px 1px;}
+    .sortable-item{}
+    .sortable-handle{cursor:move}
+    .sortable-handle:hover{background-color: red}
+
+    .sortable-placeholder{border:1px dashed darkgrey;box-sizing:border-box;background-color:red}
+    .sortable-drag{position:absolute;pointer-events:none;opacity:.8;z-index:9999;}
+    .sortable-hidden{display:none!important}
+    </style>
+
+
+    <!--scripts-->
+    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="dist/ng-sortable.js"></script>
+
+
+</head>
+<body ng-controller="MainCtrl">
+
+    <label><input type="checkbox" ng-model="dragable"> 可拖</label>
+
+    <div sortable ng-model="itemsList">
+        <div ng-repeat="item in itemsList" sortable-item>
+            <div sortable-item-handle>{{item.Label}}</div>
+        </div>
+    </div>
+
+
+<table style="width:100%">
+    <tbody sortable="dragControlListeners" ng-model="itemsList2" >
+        <tr ng-repeat="item in itemsList2" sortable-item>
+            <td sortable-item-handle><span>拖我</span> {{item.Id}}.</td><td sortable-item-handle> {{item.Label}}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    
+    var app = angular.module('test', ['ui.sortable']);
+
+    app.controller('MainCtrl', function ($scope) {
+
+    var i;
+    $scope.itemsList = [];
+    $scope.itemsList2 = [];
+    $scope.dragable = true;
+
+    for (i = 0; i <= 5; i += 1) {
+        $scope.itemsList.push({'Id': i, 'Label': 'Item ' + i});
+    }
+
+
+    for (i = 0; i <= 7; i += 1) {
+        $scope.itemsList2.push({'Id': i, 'Label': 'Item2- ' + i});
+    }
+
+    $scope.dragControlListeners = {
+        accept: function (sourceItemHandleScope, destSortableScope) {
+             console.info('s:',sourceItemHandleScope, 'd:',destSortableScope)
+            return $scope.dragable;
+            // return false;
+        },
+        itemMoved: function (event) {console.log('itemMoved',event)},
+        orderChanged: function(event) { console.log('orderChanged',event)}
+    };
+
+});
+</script>
+</body>
+</html>
